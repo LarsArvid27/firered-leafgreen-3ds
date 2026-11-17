@@ -1,0 +1,152 @@
+{
+  "assets": {
+    "ciaForwarder": null,
+    "recipe": {
+      "path": "payload/emerald3ds.recipe",
+      "releaseAsset": null,
+      "sha256": "ee443a5c3f0e3802638b728b06acabb4e116e94bcc88962e903cbd9e6c4405d4",
+      "size": 297552
+    },
+    "smdh": {
+      "path": "payload/FireRed3DS.smdh",
+      "releaseAsset": null,
+      "sha256": "b6ad40b578bdb5c578f4eb396b25db4b17bda828f8510adb34d7f4e3f76a83d7",
+      "size": 14016
+    },
+    "threeDsx": {
+      "path": "payload/FireRed3DS.3dsx",
+      "releaseAsset": null,
+      "sha256": "21c0770092a3d01982b8139ad3450f95c4d4f318383eb7b80ab0b718d3d70952",
+      "size": 5119116
+    }
+  },
+  "builderVersion": "0.5.0",
+  "dataAbi": "da064bc1",
+  "entrypoint": {
+    "apiVersion": 2,
+    "function": "run_web_build",
+    "module": "emerald3ds_builder.web",
+    "pythonPath": "python"
+  },
+  "files": [
+    {
+      "path": "licenses/LICENSE-PORT.md",
+      "sha256": "a8e3f9b65e9cacdb6396ff0c08eda0a487938cafd1c668c8712a2e153a0fb1e6",
+      "size": 22805
+    },
+    {
+      "path": "payload/FireRed3DS.3dsx",
+      "sha256": "21c0770092a3d01982b8139ad3450f95c4d4f318383eb7b80ab0b718d3d70952",
+      "size": 5119116
+    },
+    {
+      "path": "payload/FireRed3DS.smdh",
+      "sha256": "b6ad40b578bdb5c578f4eb396b25db4b17bda828f8510adb34d7f4e3f76a83d7",
+      "size": 14016
+    },
+    {
+      "path": "payload/emerald3ds.recipe",
+      "sha256": "ee443a5c3f0e3802638b728b06acabb4e116e94bcc88962e903cbd9e6c4405d4",
+      "size": 297552
+    },
+    {
+      "path": "python/emerald3ds_builder/__init__.py",
+      "sha256": "c29f7885b0763bd606a326b1708fa7ce9e9758d81ade79a8b1b7aa2b22aaa0fe",
+      "size": 104
+    },
+    {
+      "path": "python/emerald3ds_builder/build.py",
+      "sha256": "294abf8f706eab5a95aa02d469122cd5bbfe9c329e979df053e4b120e0e970fb",
+      "size": 17378
+    },
+    {
+      "path": "python/emerald3ds_builder/errors.py",
+      "sha256": "15ea0bdf497317352b7acf87ee8bd410e8c48dc7ffeb094ff27a31a1194f7a50",
+      "size": 702
+    },
+    {
+      "path": "python/emerald3ds_builder/followers.py",
+      "sha256": "2cfac980f213d1652aaf525cba217c6f1d60febafcf898cfe8e642010da257b0",
+      "size": 17442
+    },
+    {
+      "path": "python/emerald3ds_builder/followers_sources.py",
+      "sha256": "f86b5016148dc5bbc01e43f788956375afa4c1003be902e51f8636dc49000946",
+      "size": 102773
+    },
+    {
+      "path": "python/emerald3ds_builder/pak.py",
+      "sha256": "836ca44d6611b5bc46b322c1999d4bcd383d01b209b6c45c8e4f4691ca21f164",
+      "size": 7003
+    },
+    {
+      "path": "python/emerald3ds_builder/precompiled.py",
+      "sha256": "1efc67106a42b0e861fcafd614778c8563a03c95fc8343cf50c2b8bb6d151cb3",
+      "size": 18918
+    },
+    {
+      "path": "python/emerald3ds_builder/recipe.py",
+      "sha256": "2fa60906ad05185f518d6fef4a96f3f617b453847a8c578ca2c451e88d289c27",
+      "size": 10830
+    },
+    {
+      "path": "python/emerald3ds_builder/rom.py",
+      "sha256": "7ed7f5ff17eb50519b7c4046c52e138341ce340cdb35597062f0fdff53848ff4",
+      "size": 6270
+    },
+    {
+      "path": "python/emerald3ds_builder/voxel.py",
+      "sha256": "ba43be6c7130fd2a5c0bcac19b6396db6b91a7bf598f03920afdb0a2060b1cff",
+      "size": 10825
+    },
+    {
+      "path": "python/emerald3ds_builder/vtree.py",
+      "sha256": "740d8eb7d36d223d3f4feefc5278961c609f4cd1dbc53a3894d15b77fc8f51e9",
+      "size": 6296
+    },
+    {
+      "path": "python/emerald3ds_builder/web.py",
+      "sha256": "b4cd6c4a841460bd068ecc01665f75ad0fdea0d923bd2fb7599cae45e91aef9e",
+      "size": 5802
+    },
+    {
+      "path": "python/emerald3ds_builder/webmanifest.py",
+      "sha256": "640ba8f86e32bc08f1712819f168aa447320a41c37cc65a7c5b664ffc136a9b5",
+      "size": 10867
+    }
+  ],
+  "install": {
+    "directory": "3ds/firered3ds",
+    "files": [
+      "FireRed3DS.3dsx",
+      "FireRed3DS.smdh",
+      "firered3ds.pak"
+    ]
+  },
+  "kind": "emerald3ds-web-payload",
+  "packSchema": 1,
+  "pyodideCompatibility": {
+    "inprocessGenerators": true,
+    "subprocess": false
+  },
+  "pythonRuntime": {
+    "minimumVersion": "3.11",
+    "packages": [],
+    "stdlib": [
+      "zlib"
+    ]
+  },
+  "recipeRelease": "v0.5.0",
+  "releaseTag": "v0.5.0",
+  "releaseVersion": "0.5.0",
+  "schemaVersion": 1,
+  "supportedRoms": [
+    {
+      "code": "BPRE",
+      "language": "en",
+      "name": "Pokemon FireRed (USA) v1.0",
+      "region": "USA",
+      "sha1": "41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc"
+    }
+  ]
+}

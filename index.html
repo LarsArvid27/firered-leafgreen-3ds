@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FireRed &amp; LeafGreen 3DS — build the game from your own ROM</title>
+<meta name="description" content="Pokémon FireRed and LeafGreen for the Nintendo 3DS with both screens. Build it in your browser from your own USA v1.0 ROM.">
+<style>
+  :root {
+    --fire: #e5482c; --fire-deep: #9e2416; --fire-glow: #ff8a3d;
+    --leaf: #3fa34d; --leaf-deep: #1f6b2c; --leaf-glow: #9be15d;
+    --ink: #1d1714; --paper: #fbf6f0; --muted: #6f625a; --line: #e8ddd2;
+    --accent: #c4513a; --accent-deep: #7a2c20; --accent-glow: #ffb36b;
+    --radius: 18px;
+  }
+  body.fire { --accent: var(--fire); --accent-deep: var(--fire-deep); --accent-glow: var(--fire-glow); }
+  body.leaf { --accent: var(--leaf); --accent-deep: var(--leaf-deep); --accent-glow: var(--leaf-glow); }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; color: var(--ink); background: var(--paper);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  a { color: var(--accent-deep); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero: the two cartridges side by side. */
+  header.hero { position: relative; overflow: hidden; color: #fff; }
+  .halves { display: grid; grid-template-columns: 1fr 1fr; min-height: 300px; }
+  .half { position: relative; padding: 56px 28px 40px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .half.fire { background: radial-gradient(120% 90% at 20% 10%, var(--fire-glow) 0%, var(--fire) 45%, var(--fire-deep) 100%); }
+  .half.leaf { background: radial-gradient(120% 90% at 80% 10%, var(--leaf-glow) 0%, var(--leaf) 45%, var(--leaf-deep) 100%); text-align: right; align-items: flex-end; }
+  .half::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .14;
+    background: repeating-linear-gradient(45deg, #fff 0 1px, transparent 1px 12px),
+                repeating-linear-gradient(-45deg, #fff 0 1px, transparent 1px 12px);
+  }
+  .half h2 { margin: 0; font-size: clamp(28px, 5vw, 46px); letter-spacing: .5px; line-height: 1.05; text-shadow: 0 2px 0 rgba(0,0,0,.18); }
+  .half p { margin: 6px 0 0; opacity: .92; font-weight: 600; }
+  .ball {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 120px; height: 120px; border-radius: 50%; z-index: 2;
+    background: linear-gradient(#f4f1ec 0 0) bottom / 100% 50% no-repeat, linear-gradient(180deg, #ef5a43, #c22a1d);
+    box-shadow: 0 0 0 6px #241c19, 0 14px 30px rgba(0,0,0,.35);
+  }
+  .ball::before { content: ""; position: absolute; left: -6px; right: -6px; top: 50%; height: 10px; margin-top: -5px; background: #241c19; }
+  .ball::after { content: ""; position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px; border-radius: 50%; background: #f8f6f2; box-shadow: 0 0 0 7px #241c19, inset 0 0 0 4px #ddd6cc; }
+  .titlebar { background: var(--ink); color: #fff; }
+  .titlebar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
+  .titlebar h1 { margin: 0; font-size: 20px; letter-spacing: .3px; }
+  .titlebar .tagline { opacity: .7; font-size: 14px; flex: 1; }
+  .kofi-top { padding: 9px 16px !important; font-size: 15px; background: #ff5e5b !important; color: #fff !important; box-shadow: none !important; }
+
+  main { padding: 34px 0 60px; }
+  .lead { font-size: 19px; max-width: 760px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 26px 0; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 22px; box-shadow: 0 1px 0 rgba(0,0,0,.03); }
+  .card h3 { margin: 0 0 6px; font-size: 18px; }
+  .card.game { border-top: 6px solid; }
+  .card.game.fire { border-top-color: var(--fire); }
+  .card.game.leaf { border-top-color: var(--leaf); }
+  .tag { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; color: #fff; }
+  .tag.fire { background: var(--fire); } .tag.leaf { background: var(--leaf); }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; word-break: break-all; }
+  .need { background: #fff7e8; border: 1px solid #f1d9a8; border-radius: var(--radius); padding: 18px 22px; }
+  .need strong { color: #8a5300; }
+
+  /* The builder. */
+  #builder { margin-top: 34px; }
+  .drop {
+    display: block; border: 2px dashed var(--line); border-radius: var(--radius); background: #fff;
+    padding: 34px 20px; text-align: center; cursor: pointer; transition: border-color .15s, background .15s;
+  }
+  .drop:hover, .drop.over { border-color: var(--accent); background: #fffaf6; }
+  .drop input { display: none; }
+  .drop .big { font-size: 20px; font-weight: 700; }
+  .status { margin-top: 18px; display: none; }
+  .status.show { display: block; }
+  .detected { display: flex; gap: 16px; align-items: center; }
+  .chip { width: 54px; height: 54px; border-radius: 14px; flex: none; background: var(--accent); box-shadow: inset 0 -6px 0 rgba(0,0,0,.18); position: relative; }
+  .chip::after { content: ""; position: absolute; inset: 14px; border-radius: 50%; background: linear-gradient(#fff 0 0) bottom/100% 50% no-repeat, #ee4a3a; box-shadow: 0 0 0 3px #241c19; }
+  .err { color: #a3221a; }
+  .btn {
+    appearance: none; border: 0; border-radius: 14px; padding: 14px 22px; font: inherit; font-weight: 700;
+    color: #fff; background: var(--accent); cursor: pointer; box-shadow: inset 0 -4px 0 rgba(0,0,0,.2); text-decoration: none;
+  }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .btn.ghost { background: transparent; color: var(--accent-deep); box-shadow: inset 0 0 0 2px var(--accent); }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 16px; }
+  .bar { height: 12px; background: #efe6dd; border-radius: 999px; overflow: hidden; margin-top: 14px; }
+  .bar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--accent), var(--accent-glow)); transition: width .25s; }
+  .steps { list-style: none; padding: 0; margin: 12px 0 0; display: flex; gap: 8px; flex-wrap: wrap; font-size: 14px; }
+  .steps li { padding: 4px 10px; border-radius: 999px; background: #f2ebe4; color: var(--muted); }
+  .steps li.on { background: var(--accent); color: #fff; }
+  .steps li.done { background: #e2efe0; color: #2d6a33; }
+  .small { font-size: 14px; color: var(--muted); }
+
+  ol.install { padding-left: 22px; } ol.install li { margin: 6px 0; }
+  details { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 12px 18px; margin: 10px 0; }
+  details summary { cursor: pointer; font-weight: 700; }
+  .support { background: linear-gradient(90deg, var(--fire-deep), var(--fire) 35%, var(--leaf) 65%, var(--leaf-deep)); color: #fff; padding: 28px 0; }
+  .support .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .support h2 { margin: 0 0 4px; font-size: 22px; }
+  .support p { margin: 0; opacity: .95; max-width: 560px; }
+  .kofi { display: inline-flex; align-items: center; gap: 10px; background: #fff; color: #1d1714; text-decoration: none;
+          font-weight: 800; padding: 13px 20px; border-radius: 999px; box-shadow: 0 6px 16px rgba(0,0,0,.2); }
+  .kofi:hover { transform: translateY(-1px); }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: 14px; }
+
+  @media (max-width: 640px) {
+    .halves { grid-template-columns: 1fr; }
+    .half.leaf { text-align: left; align-items: flex-start; }
+    .ball { width: 84px; height: 84px; right: 24px; left: auto; transform: translateY(-50%); }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="halves">
+    <div class="half fire"><h2>FireRed</h2><p>Charizard's version</p></div>
+    <div class="half leaf"><h2>LeafGreen</h2><p>Venusaur's version</p></div>
+  </div>
+  <div class="ball" aria-hidden="true"></div>
+</header>
+<div class="titlebar"><div class="wrap"><h1>FireRed &amp; LeafGreen 3DS</h1><span class="tagline">Both versions, one page &middot; built from your own ROM</span><a class="kofi kofi-top" href="https://ko-fi.com/larsarvid" target="_blank" rel="noopener"><span class="cup" aria-hidden="true">&#9749;</span> Support on Ko-fi</a></div></div>
+
+<main class="wrap">
+  <p class="lead">Kanto on the Nintendo 3DS, using both screens: the game on top, and on the touch screen your party, bag, map, an Emerald-style battle menu and quick settings. This page has <strong>both versions</strong>: give it your ROM and it works out whether it is FireRed or LeafGreen and builds that one.</p>
+
+  <div class="grid">
+    <div class="card game fire">
+      <span class="tag fire">FireRed</span>
+      <h3>Pokémon FireRed (USA) v1.0</h3>
+      <div class="small">Game code BPRE, revision 0</div>
+      <div class="small">SHA-1 <span class="mono">41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc</span></div>
+    </div>
+    <div class="card game leaf">
+      <span class="tag leaf">LeafGreen</span>
+      <h3>Pokémon LeafGreen (USA) v1.0</h3>
+      <div class="small">Game code BPGE, revision 0</div>
+      <div class="small">SHA-1 <span class="mono">574fa542ffebb14be69902d1d36f1ec0a4afd71e</span></div>
+    </div>
+  </div>
+
+  <div class="need">
+    <strong>You need version 1.0 of the ROM.</strong> Version 1.1 (Rev 1) of either game does not work, and neither do other languages, hacks or patched files. This page checks your file and tells you which one it is. Dump the ROM from a cartridge you own; this site does not provide ROMs.
+  </div>
+
+  <section id="builder">
+    <h2>Build it</h2>
+    <label class="drop" id="drop">
+      <input type="file" id="rom" accept=".gba,.zip,.agb,.bin">
+      <div class="big">Choose your FireRed or LeafGreen ROM</div>
+      <div class="small">or drop it here &middot; .gba or a .zip holding one &middot; it never leaves your browser</div>
+    </label>
+
+    <div class="status card" id="status">
+      <div class="detected">
+        <div class="chip" aria-hidden="true"></div>
+        <div>
+          <div id="gameName" style="font-weight:700;font-size:18px"></div>
+          <div id="gameNote" class="small"></div>
+        </div>
+      </div>
+      <div class="row" id="actions">
+        <button class="btn" id="build" disabled>Build</button>
+        <span class="small" id="buildNote"></span>
+      </div>
+      <div id="progressBox" style="display:none">
+        <div class="bar"><div id="bar"></div></div>
+        <ul class="steps" id="steps">
+          <li data-s="load">Loading the builder</li>
+          <li data-s="rom">Checking the ROM</li>
+          <li data-s="data">Extracting game data</li>
+          <li data-s="scenery">Follower sprites</li>
+          <li data-s="verify">Packing</li>
+        </ul>
+        <div class="small" id="message" style="margin-top:8px"></div>
+      </div>
+      <div class="row" id="done" style="display:none">
+        <a class="btn" id="download" download>Download for the SD card</a>
+        <span class="small" id="doneNote"></span>
+      </div>
+      <div class="err" id="error" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Install</h2>
+    <ol class="install">
+      <li>Your 3DS needs custom firmware and the Homebrew Launcher.</li>
+      <li>Extract the ZIP to the root of the SD card. It holds a <code>3ds</code> folder: FireRed goes into <code>3ds/firered3ds/</code>, LeafGreen into <code>3ds/leafgreen3ds/</code>. Each game keeps its own save there.</li>
+      <li>Open the Homebrew Launcher and start <strong>FireRed 3DS</strong> or <strong>LeafGreen 3DS</strong>.</li>
+      <li>Updating later: build again with the same ROM and extract over the old files. Your save is kept.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Questions</h2>
+    <details><summary>How do I know if my ROM is version 1.0?</summary>
+      <p>Choose it above: the page reads its header and checksum and tells you. Version 1.1 cartridges and dumps exist for both games and are refused, because the game data is rebuilt byte for byte from version 1.0.</p></details>
+    <details><summary>Is my ROM uploaded anywhere?</summary>
+      <p>No. Everything runs inside your browser. The ROM is read into memory, the game data is rebuilt from it there, and only the result is offered to you as a download. Nothing about the ROM is sent to any server.</p></details>
+    <details><summary>What does the download contain?</summary>
+      <p>The game's 3DS program and a data pack made from your ROM. The program on its own contains no game data, which is why your ROM is needed.</p></details>
+    <details><summary>Following Pokémon look like HeartGold/SoulSilver's. Where do they come from?</summary>
+      <p>The builder downloads the HeartGold/SoulSilver overworld sprites from the pret decompilation project while it builds, checks each one against a pinned checksum and converts it. If the download fails the game still works, just without followers.</p></details>
+    <details><summary>Does it run on an emulator?</summary>
+      <p>It is a 3DS homebrew program, so it runs on 3DS emulators that support homebrew (for example Azahar) as well as on real hardware.</p></details>
+  </section>
+</main>
+
+<section class="support">
+  <div class="wrap">
+    <div>
+      <h2>Enjoying it?</h2>
+      <p>FireRed &amp; LeafGreen 3DS is free. If you'd like to support its development, you can buy me a coffee.</p>
+    </div>
+    <a class="kofi" href="https://ko-fi.com/larsarvid" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4 5h13a3 3 0 0 1 0 6h-1.1A6 6 0 0 1 10 16H9a5 5 0 0 1-5-5V5Zm12 2v2h1a1 1 0 0 0 0-2h-1ZM3 18h14v2H3z"/><path fill="#ff5e5b" d="M10.2 8.2c-.7-.7-1.9-.7-2.6 0-.7.7-.7 1.8 0 2.5L10 13l2.4-2.3c.7-.7.7-1.8 0-2.5-.7-.7-1.9-.7-2.6 0l-.1.1z"/></svg>
+      Support me on Ko-fi
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    FireRed 3DS and LeafGreen 3DS are fan projects based on <a href="https://github.com/ZallaxDev/emerald-3ds">Emerald 3DS</a> by Zallax and the <a href="https://github.com/pret/pokefirered">pret/pokefirered</a> decompilation, released under CC BY-NC-SA 4.0 (non-commercial). Pokémon is © Nintendo, Creatures Inc. and GAME FREAK inc. This project is not affiliated with or endorsed by them. No ROMs are provided.
+  </div>
+</footer>
+
+<script>
+(() => {
+  const GAMES = {
+    "41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc": { key: "fire", name: "Pokémon FireRed (USA) v1.0", title: "FireRed 3DS", app: "firered3ds" },
+    "574fa542ffebb14be69902d1d36f1ec0a4afd71e": { key: "leaf", name: "Pokémon LeafGreen (USA) v1.0", title: "LeafGreen 3DS", app: "leafgreen3ds" },
+  };
+  const CODES = { BPRE: ["fire", "Pokémon FireRed (USA)"], BPGE: ["leaf", "Pokémon LeafGreen (USA)"],
+                  BPRJ: ["fire", "Pokémon FireRed (Japan)"], BPRS: ["fire", "Pokémon FireRed (Spain)"],
+                  BPRD: ["fire", "Pokémon FireRed (Germany)"], BPRF: ["fire", "Pokémon FireRed (France)"],
+                  BPRI: ["fire", "Pokémon FireRed (Italy)"], BPGJ: ["leaf", "Pokémon LeafGreen (Japan)"],
+                  BPGS: ["leaf", "Pokémon LeafGreen (Spain)"], BPGD: ["leaf", "Pokémon LeafGreen (Germany)"],
+                  BPGF: ["leaf", "Pokémon LeafGreen (France)"], BPGI: ["leaf", "Pokémon LeafGreen (Italy)"],
+                  BPEE: [null, "Pokémon Emerald"], AXVE: [null, "Pokémon Ruby"], AXPE: [null, "Pokémon Sapphire"] };
+  const $ = id => document.getElementById(id);
+  const ROM_SIZE = 16 * 1024 * 1024;
+  let manifest = null, romBytes = null, romName = "", game = null, worker = null, url = null;
+
+  // Which versions this release builds (a game without its data recipe is listed, not offered).
+  fetch("payload/web-manifest.json", { cache: "no-cache" }).then(r => r.ok ? r.json() : null)
+    .then(m => { manifest = m; }).catch(() => {});
+
+  function available(sha1) {
+    if (!manifest) return true;
+    const roms = [...(manifest.supportedRoms || []), ...((manifest.variants || []).map(v => v.rom))];
+    return roms.some(r => r.sha1 === sha1);
+  }
+
+  function setTheme(key) {
+    document.body.classList.remove("fire", "leaf");
+    if (key) document.body.classList.add(key);
+  }
+
+  async function unzipOne(bytes) {
+    // A .zip holding one ROM: read with the browser's own decompressor.
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    let p = 0;
+    while (p + 30 <= bytes.length && view.getUint32(p, true) === 0x04034b50) {
+      const method = view.getUint16(p + 8, true), csize = view.getUint32(p + 18, true);
+      const nlen = view.getUint16(p + 26, true), xlen = view.getUint16(p + 28, true);
+      const name = new TextDecoder().decode(bytes.subarray(p + 30, p + 30 + nlen));
+      const start = p + 30 + nlen + xlen, data = bytes.subarray(start, start + csize);
+      if (/\.(gba|agb|bin)$/i.test(name)) {
+        if (method === 0) return data;
+        if (method === 8 && "DecompressionStream" in window) {
+          const out = await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer();
+          return new Uint8Array(out);
+        }
+        throw new Error("This ZIP could not be opened here. Extract the .gba file and choose that instead.");
+      }
+      p = start + csize;
+    }
+    throw new Error("The ZIP file must contain a .gba file.");
+  }
+
+  async function check(file) {
+    $("status").classList.add("show");
+    $("error").textContent = ""; $("done").style.display = "none"; $("progressBox").style.display = "none";
+    $("build").disabled = true; $("buildNote").textContent = "";
+    $("gameName").textContent = "Reading " + file.name + "…"; $("gameNote").textContent = "";
+    let bytes = new Uint8Array(await file.arrayBuffer());
+    try {
+      if (/\.zip$/i.test(file.name)) bytes = await unzipOne(bytes);
+    } catch (e) { return fail(e.message); }
+    if (bytes.length > ROM_SIZE) return fail("This file is larger than a GBA cartridge, so it is not a FireRed or LeafGreen ROM.");
+    if (bytes.length < ROM_SIZE) { const full = new Uint8Array(ROM_SIZE).fill(0xff); full.set(bytes); bytes = full; }
+    const code = String.fromCharCode(...bytes.subarray(0xAC, 0xB0)), rev = bytes[0xBC];
+    const sha1 = [...new Uint8Array(await crypto.subtle.digest("SHA-1", bytes))].map(b => b.toString(16).padStart(2, "0")).join("");
+    const known = CODES[code];
+    game = GAMES[sha1] || null;
+    if (game) {
+      setTheme(game.key);
+      $("gameName").textContent = game.name;
+      if (!available(sha1)) {
+        $("gameNote").textContent = "Recognised, but this release cannot build " + game.title + " yet. Check back soon.";
+        return;
+      }
+      $("gameNote").textContent = "A clean version 1.0 dump. It will be built as " + game.title + ".";
+      romBytes = bytes; romName = file.name;
+      $("build").disabled = false;
+      $("build").textContent = "Build " + game.title;
+      return;
+    }
+    setTheme(known ? known[0] : null);
+    if (known && known[0] && (code === "BPRE" || code === "BPGE") && rev !== 0)
+      return fail(known[1] + " version 1." + rev + ". Only version 1.0 is supported: this file cannot be used.");
+    if (known && (code === "BPRE" || code === "BPGE"))
+      return fail("This is " + known[1] + " v1.0, but not an unmodified dump (patched, hacked or a bad dump). Use a clean dump of your cartridge.");
+    if (known && known[0]) return fail("This is " + known[1] + ". Only the USA versions are supported.");
+    if (known) return fail("This is " + known[1] + ", not FireRed or LeafGreen.");
+    fail("This file is not a FireRed or LeafGreen ROM.");
+  }
+
+  function fail(text) {
+    $("gameName").textContent = "This ROM can't be used";
+    $("gameNote").textContent = "";
+    $("error").textContent = text;
+    $("build").disabled = true;
+  }
+
+  function stage(s, fraction, message) {
+    const order = ["load", "rom", "data", "scenery", "verify"];
+    const at = order.indexOf(s);
+    document.querySelectorAll("#steps li").forEach(li => {
+      const i = order.indexOf(li.dataset.s);
+      li.className = i < at ? "done" : i === at ? "on" : "";
+    });
+    if (fraction != null) $("bar").style.width = Math.round(fraction * 100) + "%";
+    if (message) $("message").textContent = message;
+  }
+
+  $("build").addEventListener("click", () => {
+    if (!romBytes || !game) return;
+    $("build").disabled = true; $("error").textContent = ""; $("done").style.display = "none";
+    $("progressBox").style.display = "block";
+    stage("load", 0.02, "Starting Python in your browser (the first time takes a little while)…");
+    if (worker) worker.terminate();
+    worker = new Worker("builder-worker.js");
+    worker.onmessage = ev => {
+      const m = ev.data;
+      if (m.type === "progress") stage(m.stage, m.fraction, m.message);
+      else if (m.type === "done") {
+        stage("verify", 1, "Done.");
+        document.querySelectorAll("#steps li").forEach(li => li.className = "done");
+        if (url) URL.revokeObjectURL(url);
+        url = URL.createObjectURL(new Blob([m.zip], { type: "application/zip" }));
+        $("download").href = url;
+        $("download").download = m.fileName;
+        $("doneNote").textContent = m.note;
+        $("done").style.display = "flex";
+        $("build").disabled = false; $("build").textContent = "Build again";
+        worker.terminate(); worker = null;
+      } else if (m.type === "error") {
+        $("error").textContent = m.message + (m.hint ? " " + m.hint : "");
+        $("build").disabled = false;
+        worker.terminate(); worker = null;
+      }
+    };
+    worker.onerror = e => { $("error").textContent = "The builder stopped: " + (e.message || "unknown error"); $("build").disabled = false; };
+    const copy = romBytes.slice();
+    worker.postMessage({ rom: copy, name: romName }, [copy.buffer]);
+  });
+
+  const drop = $("drop");
+  $("rom").addEventListener("change", e => e.target.files[0] && check(e.target.files[0]));
+  ["dragenter", "dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", e => e.dataTransfer.files[0] && check(e.dataTransfer.files[0]));
+})();
+</script>
+</body>
+</html>
