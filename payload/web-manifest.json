@@ -4,7 +4,7 @@
     "recipe": {
       "path": "payload/emerald3ds.recipe",
       "releaseAsset": null,
-      "sha256": "ee443a5c3f0e3802638b728b06acabb4e116e94bcc88962e903cbd9e6c4405d4",
+      "sha256": "d59a66bf7d9d49154adab8682de929dbebc28b3ed73352345be0bcd0533832ae",
       "size": 297552
     },
     "smdh": {
@@ -16,7 +16,7 @@
     "threeDsx": {
       "path": "payload/FireRed3DS.3dsx",
       "releaseAsset": null,
-      "sha256": "21c0770092a3d01982b8139ad3450f95c4d4f318383eb7b80ab0b718d3d70952",
+      "sha256": "4b0a2598ac9e313a78f773df81230d5fa9750903ee7a62f944ed1a1d08583f6f",
       "size": 5119116
     }
   },
@@ -36,7 +36,7 @@
     },
     {
       "path": "payload/FireRed3DS.3dsx",
-      "sha256": "21c0770092a3d01982b8139ad3450f95c4d4f318383eb7b80ab0b718d3d70952",
+      "sha256": "4b0a2598ac9e313a78f773df81230d5fa9750903ee7a62f944ed1a1d08583f6f",
       "size": 5119116
     },
     {
@@ -46,8 +46,23 @@
     },
     {
       "path": "payload/emerald3ds.recipe",
-      "sha256": "ee443a5c3f0e3802638b728b06acabb4e116e94bcc88962e903cbd9e6c4405d4",
+      "sha256": "d59a66bf7d9d49154adab8682de929dbebc28b3ed73352345be0bcd0533832ae",
       "size": 297552
+    },
+    {
+      "path": "payload/lg/LeafGreen3DS.3dsx",
+      "sha256": "2c8088882d28b84fc9917d0869f986cd470bb86361bc9c29f1c43a0cc2de4b48",
+      "size": 5090208
+    },
+    {
+      "path": "payload/lg/LeafGreen3DS.smdh",
+      "sha256": "0b94664a21fdfad51df16f192945cc494170e3f05765b5ab9838529ab580a4da",
+      "size": 14016
+    },
+    {
+      "path": "payload/lg/emerald3ds.recipe",
+      "sha256": "2b31759c73c510b30658fa4cbd5d9b3681b198aa61c157ace13fdd4f2bda02e8",
+      "size": 300756
     },
     {
       "path": "python/emerald3ds_builder/__init__.py",
@@ -136,9 +151,9 @@
       "zlib"
     ]
   },
-  "recipeRelease": "v0.5.0",
-  "releaseTag": "v0.5.0",
-  "releaseVersion": "0.5.0",
+  "recipeRelease": "v0.1.0",
+  "releaseTag": "v0.1.0",
+  "releaseVersion": "0.1.0",
   "schemaVersion": 1,
   "supportedRoms": [
     {
@@ -147,6 +162,47 @@
       "name": "Pokemon FireRed (USA) v1.0",
       "region": "USA",
       "sha1": "41cb23d8dccc8ebd7c649cd8fbb58eeace6e2fdc"
+    }
+  ],
+  "variants": [
+    {
+      "assets": {
+        "recipe": {
+          "path": "payload/lg/emerald3ds.recipe",
+          "releaseAsset": null,
+          "sha256": "2b31759c73c510b30658fa4cbd5d9b3681b198aa61c157ace13fdd4f2bda02e8",
+          "size": 300756
+        },
+        "smdh": {
+          "path": "payload/lg/LeafGreen3DS.smdh",
+          "releaseAsset": null,
+          "sha256": "0b94664a21fdfad51df16f192945cc494170e3f05765b5ab9838529ab580a4da",
+          "size": 14016
+        },
+        "threeDsx": {
+          "path": "payload/lg/LeafGreen3DS.3dsx",
+          "releaseAsset": null,
+          "sha256": "2c8088882d28b84fc9917d0869f986cd470bb86361bc9c29f1c43a0cc2de4b48",
+          "size": 5090208
+        }
+      },
+      "dataAbi": "0f974dca",
+      "install": {
+        "directory": "3ds/leafgreen3ds",
+        "files": [
+          "LeafGreen3DS.3dsx",
+          "LeafGreen3DS.smdh",
+          "leafgreen3ds.pak"
+        ]
+      },
+      "recipeRelease": "v0.1.0",
+      "rom": {
+        "code": "BPGE",
+        "language": "en",
+        "name": "Pokemon LeafGreen (USA) v1.0",
+        "region": "USA",
+        "sha1": "574fa542ffebb14be69902d1d36f1ec0a4afd71e"
+      }
     }
   ]
 }

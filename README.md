@@ -1,5 +1,7 @@
 # FireRed & LeafGreen 3DS
 
+**Version 0.1.0**: an early release, more improvements are on the way.
+
 Pokémon FireRed and LeafGreen for the Nintendo 3DS with both screens: the game on top, and on the touch screen your party, bag, map, an Emerald-style battle menu and quick settings.
 
 **Build it in your browser from your own ROM: https://larsarvid27.github.io/firered-leafgreen-3ds/**
