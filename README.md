@@ -1,0 +1,1 @@
+# firered-leafgreen-3ds
