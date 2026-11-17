@@ -4,8 +4,8 @@
     "recipe": {
       "path": "payload/emerald3ds.recipe",
       "releaseAsset": null,
-      "sha256": "d59a66bf7d9d49154adab8682de929dbebc28b3ed73352345be0bcd0533832ae",
-      "size": 297552
+      "sha256": "b1e053c3a84f99003d9cdcc8b76bed45c66a9c579114bbff9f847867df253d32",
+      "size": 297148
     },
     "smdh": {
       "path": "payload/FireRed3DS.smdh",
@@ -16,12 +16,12 @@
     "threeDsx": {
       "path": "payload/FireRed3DS.3dsx",
       "releaseAsset": null,
-      "sha256": "4b0a2598ac9e313a78f773df81230d5fa9750903ee7a62f944ed1a1d08583f6f",
-      "size": 5119116
+      "sha256": "f59eaf8827ae624dda75484d8d54b24c801e241ec7a3cd284b3864c336abc6f8",
+      "size": 5126136
     }
   },
   "builderVersion": "0.5.0",
-  "dataAbi": "da064bc1",
+  "dataAbi": "cbf5f5a8",
   "entrypoint": {
     "apiVersion": 2,
     "function": "run_web_build",
@@ -36,8 +36,8 @@
     },
     {
       "path": "payload/FireRed3DS.3dsx",
-      "sha256": "4b0a2598ac9e313a78f773df81230d5fa9750903ee7a62f944ed1a1d08583f6f",
-      "size": 5119116
+      "sha256": "f59eaf8827ae624dda75484d8d54b24c801e241ec7a3cd284b3864c336abc6f8",
+      "size": 5126136
     },
     {
       "path": "payload/FireRed3DS.smdh",
@@ -46,13 +46,13 @@
     },
     {
       "path": "payload/emerald3ds.recipe",
-      "sha256": "d59a66bf7d9d49154adab8682de929dbebc28b3ed73352345be0bcd0533832ae",
-      "size": 297552
+      "sha256": "b1e053c3a84f99003d9cdcc8b76bed45c66a9c579114bbff9f847867df253d32",
+      "size": 297148
     },
     {
       "path": "payload/lg/LeafGreen3DS.3dsx",
-      "sha256": "2c8088882d28b84fc9917d0869f986cd470bb86361bc9c29f1c43a0cc2de4b48",
-      "size": 5090208
+      "sha256": "e03efeec71c66633e77a7e0b63b383917fadf733d18995dcb099053d2ec7fea1",
+      "size": 5097236
     },
     {
       "path": "payload/lg/LeafGreen3DS.smdh",
@@ -61,8 +61,8 @@
     },
     {
       "path": "payload/lg/emerald3ds.recipe",
-      "sha256": "2b31759c73c510b30658fa4cbd5d9b3681b198aa61c157ace13fdd4f2bda02e8",
-      "size": 300756
+      "sha256": "16d7c73ff45a452ae30d895017336c6167c21282e102034cb51312214d06be25",
+      "size": 298472
     },
     {
       "path": "python/emerald3ds_builder/__init__.py",
@@ -170,8 +170,8 @@
         "recipe": {
           "path": "payload/lg/emerald3ds.recipe",
           "releaseAsset": null,
-          "sha256": "2b31759c73c510b30658fa4cbd5d9b3681b198aa61c157ace13fdd4f2bda02e8",
-          "size": 300756
+          "sha256": "16d7c73ff45a452ae30d895017336c6167c21282e102034cb51312214d06be25",
+          "size": 298472
         },
         "smdh": {
           "path": "payload/lg/LeafGreen3DS.smdh",
@@ -182,11 +182,11 @@
         "threeDsx": {
           "path": "payload/lg/LeafGreen3DS.3dsx",
           "releaseAsset": null,
-          "sha256": "2c8088882d28b84fc9917d0869f986cd470bb86361bc9c29f1c43a0cc2de4b48",
-          "size": 5090208
+          "sha256": "e03efeec71c66633e77a7e0b63b383917fadf733d18995dcb099053d2ec7fea1",
+          "size": 5097236
         }
       },
-      "dataAbi": "0f974dca",
+      "dataAbi": "7bd6d348",
       "install": {
         "directory": "3ds/leafgreen3ds",
         "files": [
