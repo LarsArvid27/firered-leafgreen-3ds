@@ -106,6 +106,33 @@
   .kofi { display: inline-flex; align-items: center; gap: 10px; background: #fff; color: #1d1714; text-decoration: none;
           font-weight: 800; padding: 13px 20px; border-radius: 999px; box-shadow: 0 6px 16px rgba(0,0,0,.2); }
   .kofi:hover { transform: translateY(-1px); }
+  .report { background: #241c19; color: #fff; padding: 46px 0 50px; border-top: 6px solid; border-image: linear-gradient(90deg, var(--fire), var(--leaf)) 1; }
+  .report h2 { margin: 0 0 6px; font-size: clamp(26px, 4vw, 34px); }
+  .report p { margin: 0; opacity: .85; max-width: 640px; }
+  .report-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; flex-wrap: wrap; margin-bottom: 22px; }
+  .report-form { background: #2f2622; border: 1px solid #44372f; border-radius: var(--radius); padding: 22px; }
+  .seg { display: inline-flex; background: #1b1513; border-radius: 999px; padding: 4px; margin-bottom: 18px; }
+  .seg input { display: none; }
+  .seg span { display: block; padding: 8px 18px; border-radius: 999px; cursor: pointer; font-weight: 700; color: #cbbdb3; }
+  .seg input:checked + span { background: #fff; color: #241c19; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 16px; }
+  .fields label { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px; color: #f1e8e1; }
+  .fields .wide { grid-column: 1 / -1; }
+  .fields .opt { font-weight: 400; opacity: .6; }
+  .fields input, .fields select, .fields textarea {
+    font: inherit; font-weight: 400; color: #1d1714; background: #fbf6f0; border: 2px solid transparent;
+    border-radius: 12px; padding: 11px 12px; width: 100%;
+  }
+  .fields textarea { resize: vertical; }
+  .fields input:focus, .fields select:focus, .fields textarea:focus { outline: none; border-color: var(--accent-glow); }
+  .report .row { margin-top: 18px; }
+  .btn.big { font-size: 18px; padding: 16px 26px; background: linear-gradient(90deg, var(--fire), #d2691e 50%, var(--leaf)); }
+  .btn.ghost.light { color: #fff; box-shadow: inset 0 0 0 2px rgba(255,255,255,.5); text-decoration: none; }
+  .small.light { color: #cbbdb3; }
+  .report .err { color: #ff9a8a; margin-top: 10px; }
+  .report.idea .bugonly { display: none; }
+  .navlink { color: #fff; font-weight: 700; font-size: 15px; text-decoration: none; padding: 9px 14px; border-radius: 999px; box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); }
+  @media (max-width: 640px) { .fields { grid-template-columns: 1fr; } }
   footer { border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: 14px; }
 
   @media (max-width: 640px) {
@@ -124,7 +151,7 @@
   </div>
   <div class="ball" aria-hidden="true"></div>
 </header>
-<div class="titlebar"><div class="wrap"><h1>FireRed &amp; LeafGreen 3DS <span class="ver">v0.1.0</span></h1><span class="tagline">Both versions, one page &middot; built from your own ROM</span><a class="kofi kofi-top" href="https://ko-fi.com/larsarvid" target="_blank" rel="noopener"><span class="cup" aria-hidden="true">&#9749;</span> Support on Ko-fi</a></div></div>
+<div class="titlebar"><div class="wrap"><h1>FireRed &amp; LeafGreen 3DS <span class="ver">v0.1.0</span></h1><span class="tagline">Both versions, one page &middot; built from your own ROM</span><a class="navlink" href="#report">Report a bug</a><a class="kofi kofi-top" href="https://ko-fi.com/larsarvid" target="_blank" rel="noopener"><span class="cup" aria-hidden="true">&#9749;</span> Support on Ko-fi</a></div></div>
 
 <main class="wrap">
   <p class="lead">Kanto on the Nintendo 3DS, using both screens: the game on top, and on the touch screen your party, bag, map, an Emerald-style battle menu and quick settings. This page has <strong>both versions</strong>: give it your ROM and it works out whether it is FireRed or LeafGreen and builds that one.</p>
@@ -197,6 +224,49 @@
     </ol>
   </section>
 
+</main>
+
+<section class="report" id="report">
+  <div class="wrap">
+    <div class="report-head">
+      <div>
+        <h2>Found a bug? Have an idea?</h2>
+        <p>This is an early version and every report helps. Tell me what happened and I'll look into it. Your report opens on GitHub, where you can also drag in screenshots or a video.</p>
+      </div>
+      <a class="btn ghost light" href="https://github.com/LarsArvid27/firered-leafgreen-3ds/issues" target="_blank" rel="noopener">See reported bugs</a>
+    </div>
+    <form class="report-form" id="reportForm">
+      <div class="seg" role="radiogroup" aria-label="Kind of report">
+        <label><input type="radio" name="kind" value="bug" checked><span>&#128027; Bug</span></label>
+        <label><input type="radio" name="kind" value="idea"><span>&#128161; Suggestion</span></label>
+      </div>
+      <div class="fields">
+        <label>Game
+          <select id="rGame"><option>FireRed</option><option>LeafGreen</option><option>Both</option></select>
+        </label>
+        <label class="bugonly">Played on
+          <select id="rDevice"><option>New 3DS / New 3DS XL / New 2DS XL</option><option>3DS / 3DS XL / 2DS</option><option>Azahar (emulator)</option><option>Other emulator</option></select>
+        </label>
+        <label class="bugonly wide">Where in the game
+          <input id="rWhere" placeholder="e.g. Viridian City, opening the bag">
+        </label>
+        <label class="wide"><span id="rWhatLabel">What happened</span>
+          <textarea id="rWhat" rows="4" placeholder="Describe what went wrong: a freeze, a crash, something drawn wrong..."></textarea>
+        </label>
+        <label class="bugonly wide"><span>How to make it happen again <span class="opt">(optional)</span></span>
+          <textarea id="rSteps" rows="3" placeholder="1. &#10;2. &#10;3."></textarea>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn big" type="submit">Send report on GitHub</button>
+        <span class="small light">Needs a free GitHub account. Your answers are filled in for you there.</span>
+      </div>
+      <div class="err" id="rErr"></div>
+    </form>
+  </div>
+</section>
+
+<main class="wrap" style="padding-top:34px">
   <section>
     <h2>Questions</h2>
     <details><summary>How do I know if my ROM is version 1.0?</summary>
@@ -371,6 +441,41 @@
     worker.onerror = e => { $("error").textContent = "The builder stopped: " + (e.message || "unknown error"); $("build").disabled = false; };
     const copy = romBytes.slice();
     worker.postMessage({ rom: copy, name: romName }, [copy.buffer]);
+  });
+
+  // Reports: GitHub's issue forms, filled in from this one (by field id).
+  const REPO = "https://github.com/LarsArvid27/firered-leafgreen-3ds/issues/new";
+  const report = document.querySelector(".report");
+  document.querySelectorAll('input[name="kind"]').forEach(r => r.addEventListener("change", () => {
+    const idea = document.querySelector('input[name="kind"]:checked').value === "idea";
+    report.classList.toggle("idea", idea);
+    $("rWhatLabel").textContent = idea ? "Your idea" : "What happened";
+    $("rWhat").placeholder = idea ? "What would make the game better?" : "Describe what went wrong: a freeze, a crash, something drawn wrong...";
+  }));
+  $("reportForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const idea = document.querySelector('input[name="kind"]:checked').value === "idea";
+    const what = $("rWhat").value.trim();
+    if (!what) { $("rErr").textContent = idea ? "Please describe your idea." : "Please describe what happened."; return; }
+    $("rErr").textContent = "";
+    const first = what.split("\n")[0].slice(0, 70);
+    const q = new URLSearchParams();
+    if (idea) {
+      q.set("template", "suggestion.yml");
+      q.set("title", "[Idea] " + first);
+      q.set("game", $("rGame").value);
+      q.set("idea", what);
+    } else {
+      q.set("template", "bug_report.yml");
+      q.set("title", "[Bug] " + ($("rGame").value + ": ") + first);
+      q.set("game", $("rGame").value);
+      q.set("version", "v0.1.0");
+      q.set("device", $("rDevice").value);
+      q.set("where", $("rWhere").value.trim());
+      q.set("what", what);
+      q.set("steps", $("rSteps").value.trim());
+    }
+    window.open(REPO + "?" + q.toString(), "_blank", "noopener");
   });
 
   const drop = $("drop");

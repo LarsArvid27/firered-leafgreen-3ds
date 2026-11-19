@@ -1,0 +1,57 @@
+name: Bug report
+description: Something in FireRed 3DS or LeafGreen 3DS doesn't work right.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping! The more detail, the easier it is to fix. Screenshots or a short video help a lot: drag them into any box below.
+  - type: input
+    id: game
+    attributes:
+      label: Game
+      description: FireRed or LeafGreen
+      placeholder: FireRed
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Shown next to the title on the website (for example v0.1.0)
+      placeholder: v0.1.0
+  - type: input
+    id: device
+    attributes:
+      label: Played on
+      description: "Which console or emulator: New 3DS, 3DS, 2DS, Azahar, ..."
+      placeholder: New 3DS XL
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where in the game
+      description: Town or route, battle, menu, ...
+      placeholder: "Viridian City, opening the bag"
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What went wrong? Did the game freeze, crash, show something wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to make it happen again
+      description: Step by step, if you know.
+      placeholder: |
+        1.
+        2.
+        3.
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Build the game
+    url: https://larsarvid27.github.io/firered-leafgreen-3ds/
+    about: The web page that builds FireRed 3DS or LeafGreen 3DS from your own ROM.
+  - name: Support on Ko-fi
+    url: https://ko-fi.com/larsarvid
+    about: If you'd like to support the project.
